@@ -7,6 +7,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import model.Student;
 import model.studentTable;
 
 public class UpdateStudentController extends HttpServlet {
+static LinkedList<Integer> idChecker = new LinkedList<>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,9 +33,32 @@ public class UpdateStudentController extends HttpServlet {
         HttpSession session = request.getSession();
   	int id = Integer.parseInt(request.getParameter("id"));
         Student student = studentTable.findStudentById(id);
-        session.setAttribute("student", student);
-        request.getRequestDispatcher("confirm_update.jsp").forward(request, response);
-        
+        synchronized(getServletContext()){
+            for(int i = 0; i < idChecker.size(); i++) System.out.println( idChecker.get(i) );
+            
+            if(searchId(id)){
+                request.getRequestDispatcher("handleError.jsp").forward(request, response);
+            }else{
+                getServletContext().setAttribute("student", student);
+                request.getRequestDispatcher("confirm_update.jsp").forward(request, response); 
+            }
+        }
+        idChecker.add(id);
+    }
+    public static boolean searchId(int id){
+        int ans = -1;
+        for(int i = 0; i < idChecker.size(); i++){
+            int llid = idChecker.get(i);
+            
+            if(llid == id){
+                ans = i;
+                break;
+            }
+        }
+        if(ans == -1){
+            return false;
+        }
+        return true;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

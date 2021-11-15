@@ -31,7 +31,7 @@ public class ConfirmRemoveController extends HttpServlet {
             throws ServletException, IOException {
         int rowDeleted = 0;
         HttpSession session = request.getSession();     
-        Student student = (Student) session.getAttribute("student");
+        Student student = (Student) getServletContext().getAttribute("student");
         if (request.getParameter("delete") != null ) {
             rowDeleted = studentTable.removeStudent(student.getId());
             

@@ -29,7 +29,9 @@ public class ConfirmUpdateController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Student student = (Student) session.getAttribute("student");
+        UpdateStudentController cuc = new UpdateStudentController();
+        cuc.idChecker.clear();
+        Student student = (Student) getServletContext().getAttribute("student");
         int rowUpdated = 0;
         if (request.getParameter("update") != null) {
             student.setName(request.getParameter("name"));

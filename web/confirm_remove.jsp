@@ -10,7 +10,7 @@
     </head>
     <body>
        <%
-            Student student = (Student) session.getAttribute("student");
+            Student student = (Student) getServletContext().getAttribute("student");
             
         %>
         <form name="confirmRemove" action="ConfirmRemoveController">

@@ -32,9 +32,14 @@ public class RemoveStudentController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         Student student = studentTable.findStudentById(id);
-        session.setAttribute("student", student);
-        request.getRequestDispatcher("confirm_remove.jsp").forward(request, response);
-
+        synchronized(getServletContext()){
+        if(UpdateStudentController.searchId(id)){
+             request.getRequestDispatcher("handleError.jsp").forward(request, response);  
+        }else{    
+        getServletContext().setAttribute("student", student);
+        request.getRequestDispatcher("confirm_remove.jsp").forward(request, response);  
+            }
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
